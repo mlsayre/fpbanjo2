@@ -1,0 +1,1986 @@
+on init
+make_perfview
+set_key_color(38, $KEY_COLOR_YELLOW)
+set_key_color(39, $KEY_COLOR_YELLOW)
+set_key_color(40, $KEY_COLOR_YELLOW)
+set_key_color(41, $KEY_COLOR_YELLOW)
+set_key_color(42, $KEY_COLOR_YELLOW)
+set_key_color(43, $KEY_COLOR_YELLOW)
+set_key_color(44, $KEY_COLOR_YELLOW)
+set_key_color(45, $KEY_COLOR_YELLOW)
+set_key_color(46, $KEY_COLOR_YELLOW)
+set_key_color(47, $KEY_COLOR_YELLOW)
+set_key_color(100, $KEY_COLOR_YELLOW)
+set_key_color(101, $KEY_COLOR_YELLOW)
+set_key_color(102, $KEY_COLOR_YELLOW)
+set_key_color(103, $KEY_COLOR_YELLOW)
+set_key_color(104, $KEY_COLOR_YELLOW)
+set_key_color(105, $KEY_COLOR_YELLOW)
+set_ui_height(3)
+declare $strumtime
+$strumtime := 50000
+declare ui_label $timeknob_label(1,1)
+set_text ($timeknob_label, "Strum Speed")
+declare $timeknob_label_id
+$timeknob_label_id := get_ui_id($timeknob_label)
+set_control_par($timeknob_label_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($timeknob_label_id,$CONTROL_PAR_POS_X,288)
+  set_control_par($timeknob_label_id,$CONTROL_PAR_POS_Y,2)
+
+declare ui_knob $timeknob(0,100,1)
+set_knob_unit($timeknob, $KNOB_UNIT_PERCENT)
+$timeknob := 50
+declare $timeknob_id
+$timeknob_id := get_ui_id($timeknob)
+set_control_par($timeknob_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($timeknob_id,$CONTROL_PAR_POS_X,288)
+  set_control_par($timeknob_id,$CONTROL_PAR_POS_Y,22)
+set_text ($timeknob, "Amount")
+declare ui_label $direction(1,1)
+declare $direction_id
+$direction_id := get_ui_id($direction)
+set_control_par($direction_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($direction_id,$CONTROL_PAR_POS_X,288)
+  set_control_par($direction_id,$CONTROL_PAR_POS_Y,62)
+set_text ($direction, "Next: Down")
+declare $strumcounter := 0
+
+{chord type ui buttons}
+declare ui_switch $major
+declare $major_id
+$major_id := get_ui_id($major)
+set_control_par($major_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($major_id,$CONTROL_PAR_POS_X,80)
+  set_control_par($major_id,$CONTROL_PAR_POS_Y,12)
+set_text ($major, "Major")
+
+declare ui_switch $minor
+declare $minor_id
+$minor_id := get_ui_id($minor)
+set_control_par($minor_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($minor_id,$CONTROL_PAR_POS_X,180)
+  set_control_par($minor_id,$CONTROL_PAR_POS_Y,12)
+set_text ($minor, "Minor")
+
+declare ui_switch $dom7
+declare $dom7_id
+$dom7_id := get_ui_id($dom7)
+set_control_par($dom7_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($dom7_id,$CONTROL_PAR_POS_X,80)
+  set_control_par($dom7_id,$CONTROL_PAR_POS_Y,37)
+set_text ($dom7, "Dominant 7th")
+
+declare ui_switch $major7
+declare $major7_id
+$major7_id := get_ui_id($major7)
+set_control_par($major7_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($major7_id,$CONTROL_PAR_POS_X,180)
+  set_control_par($major7_id,$CONTROL_PAR_POS_Y,37)
+set_text ($major7, "Major 7th")
+
+declare ui_switch $minor7
+declare $minor7_id
+$minor7_id := get_ui_id($minor7)
+set_control_par($minor7_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($minor7_id,$CONTROL_PAR_POS_X,80)
+  set_control_par($minor7_id,$CONTROL_PAR_POS_Y,62)
+set_text ($minor7, "Minor 7th")
+
+declare ui_switch $halfdim7
+declare $halfdim7_id
+$halfdim7_id := get_ui_id($halfdim7)
+set_control_par($halfdim7_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($halfdim7_id,$CONTROL_PAR_POS_X,180)
+  set_control_par($halfdim7_id,$CONTROL_PAR_POS_Y,62)
+set_text ($halfdim7, "Half dim 7th")
+
+declare ui_switch $dim7
+declare $dim7_id
+$dim7_id := get_ui_id($dim7)
+set_control_par($dim7_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($dim7_id,$CONTROL_PAR_POS_X,80)
+  set_control_par($dim7_id,$CONTROL_PAR_POS_Y,87)
+set_text ($dim7, "Diminished 7th")
+
+declare ui_switch $aug7
+declare $aug7_id
+$aug7_id := get_ui_id($aug7)
+set_control_par($aug7_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($aug7_id,$CONTROL_PAR_POS_X,180)
+  set_control_par($aug7_id,$CONTROL_PAR_POS_Y,87)
+set_text ($aug7, "Augmented 7th")
+
+declare ui_switch $dim
+declare $dim_id
+$dim_id := get_ui_id($dim)
+set_control_par($dim_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($dim_id,$CONTROL_PAR_POS_X,396)
+  set_control_par($dim_id,$CONTROL_PAR_POS_Y,12)
+set_text ($dim, "Diminished")
+
+declare ui_switch $aug
+declare $aug_id
+$aug_id := get_ui_id($aug)
+set_control_par($aug_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($aug_id,$CONTROL_PAR_POS_X,496)
+  set_control_par($aug_id,$CONTROL_PAR_POS_Y,12)
+set_text ($aug, "Augmented")
+
+declare ui_switch $sus4
+declare $sus4_id
+$sus4_id := get_ui_id($sus4)
+set_control_par($sus4_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($sus4_id,$CONTROL_PAR_POS_X,396)
+  set_control_par($sus4_id,$CONTROL_PAR_POS_Y,37)
+set_text ($sus4, "Sus 4")
+
+declare ui_switch $sus2
+declare $sus2_id
+$sus2_id := get_ui_id($sus2)
+set_control_par($sus2_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($sus2_id,$CONTROL_PAR_POS_X,496)
+  set_control_par($sus2_id,$CONTROL_PAR_POS_Y,37)
+set_text ($sus2, "Sus 2")
+
+declare ui_switch $major6
+declare $major6_id
+$major6_id := get_ui_id($major6)
+set_control_par($major6_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($major6_id,$CONTROL_PAR_POS_X,396)
+  set_control_par($major6_id,$CONTROL_PAR_POS_Y,62)
+set_text ($major6, "Major 6th")
+
+declare ui_switch $minor6
+declare $minor6_id
+$minor6_id := get_ui_id($minor6)
+set_control_par($minor6_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($minor6_id,$CONTROL_PAR_POS_X,496)
+  set_control_par($minor6_id,$CONTROL_PAR_POS_Y,62)
+set_text ($minor6, "Minor 6th")
+
+declare ui_switch $major9
+declare $major9_id
+$major9_id := get_ui_id($major9)
+set_control_par($major9_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($major9_id,$CONTROL_PAR_POS_X,396)
+  set_control_par($major9_id,$CONTROL_PAR_POS_Y,87)
+set_text ($major9, "Major 9th")
+
+declare ui_switch $open5
+declare $open5_id
+$open5_id := get_ui_id($open5)
+set_control_par($open5_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($open5_id,$CONTROL_PAR_POS_X,496)
+  set_control_par($open5_id,$CONTROL_PAR_POS_Y,87)
+set_text ($open5, "Open 5th")
+
+end on
+
+on ui_control ($timeknob)
+$strumtime := 100001 - $timeknob * 1000
+end on
+
+{EXPAND THESE TO KEEP MOUSED CHORD TYPES FROM CLASHING!}
+on ui_control ($major)
+if ($major=1)
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($minor)
+if ($minor=1)
+$major := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($dom7) 
+if ($dom7=1)
+$major := 0
+$minor := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($major7)
+if ($major7=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($minor7)
+if ($minor7=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($halfdim7)
+if ($halfdim7=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($dim7)
+if ($dim7=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($aug7)
+if ($aug7=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($dim)
+if ($dim=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($aug)
+if ($aug=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($sus4)
+if ($sus4=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($sus2)
+if ($sus2=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($major6)
+if ($major6=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$minor6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($minor6)
+if ($minor6=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$major9 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($major9)
+if ($major9=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$open5 := 0
+end if
+end on
+
+on ui_control ($open5)
+if ($open5=1)
+$major := 0
+$minor := 0
+$dom7 := 0
+$major7 := 0
+$minor7 := 0
+$halfdim7 := 0
+$dim7 := 0
+$aug7 := 0
+$dim := 0
+$aug := 0
+$sus4 := 0
+$sus2 := 0
+$major6 := 0
+$minor6 := 0
+$major9 := 0
+end if
+end on
+
+on note
+{strum direction control key - actually, any scrape key will do the trick}
+
+
+{MAJOR key}
+if ($major = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum major}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MAJOR} 
+
+{MINOR key}
+if ($minor = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G minor special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+
+{up strum major}
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MINOR} 
+
+{DOM7 key}
+if ($dom7 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of DOM7} 
+
+{MAJOR7 key}
+if ($major7 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+11,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+11 > 72 and $EVENT_NOTE + 11 < 92)
+play_note($EVENT_NOTE + 11,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+11,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+11 > 72 and $EVENT_NOTE + 11 < 92)
+play_note($EVENT_NOTE + 11,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MAJOR7} 
+
+{MINOR7 key}
+if ($minor7 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MINOR7} 
+
+{HALFDIM7 key}
+if ($halfdim7 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 68 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-6,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 68 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-6,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of HALFDIM7} 
+
+{DIM7 key}
+if ($dim7 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+9,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 68 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-6,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+9 > 70 and $EVENT_NOTE + 9 < 92)
+play_note($EVENT_NOTE + 9,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+9,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+9 > 70 and $EVENT_NOTE + 9 < 92)
+play_note($EVENT_NOTE + 9,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 68 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-6,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of DIM7} 
+
+{AUG7 key}
+if ($aug7 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 66 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+10,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+10 > 71 and $EVENT_NOTE + 10 < 92)
+play_note($EVENT_NOTE + 10,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 66 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-4,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of AUG7} 
+
+{DIM key}
+if ($dim = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+6 > 67 and $EVENT_NOTE + 6 < 92)
+play_note($EVENT_NOTE + 6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+6,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+6 > 67 and $EVENT_NOTE + 6 < 92)
+play_note($EVENT_NOTE + 6,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+{end of DIM} 
+
+{AUG key}
+if ($aug = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+8,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+8 > 69 and $EVENT_NOTE + 8 < 92)
+play_note($EVENT_NOTE + 8,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+8,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+8 > 69 and $EVENT_NOTE + 8 < 92)
+play_note($EVENT_NOTE + 8,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+{end of AUG} 
+
+{SUS4 key}
+if ($sus4 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 5 > 66 and $EVENT_NOTE + 5 < 92)
+play_note($EVENT_NOTE+5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum major}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 5 > 66 and $EVENT_NOTE + 5 < 92)
+play_note($EVENT_NOTE+5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of SUS4} 
+
+{SUS2 key}
+if ($sus2 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+2,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 2 > 63 and $EVENT_NOTE + 2 < 92)
+play_note($EVENT_NOTE+2,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum major}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+2,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 2 > 63 and $EVENT_NOTE + 2 < 92)
+play_note($EVENT_NOTE+2,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of SUS2} 
+
+{MAJOR6 key}
+if ($major6 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+9,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+9 > 70 and $EVENT_NOTE + 9 < 92)
+play_note($EVENT_NOTE + 9,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+9,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+9 > 70 and $EVENT_NOTE + 9 < 92)
+play_note($EVENT_NOTE + 9,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MAJOR6} 
+
+{MINOR6 key}
+if ($minor6 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+9,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+9 > 70 and $EVENT_NOTE + 9 < 92)
+play_note($EVENT_NOTE + 9,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+9,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+9 > 70 and $EVENT_NOTE + 9 < 92)
+play_note($EVENT_NOTE + 9,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 3 > 64 and $EVENT_NOTE + 3 < 92)
+play_note($EVENT_NOTE+3,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MINOR6} 
+
+{MAJOR9 key}
+if ($major9 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+14,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+14 > 75 and $EVENT_NOTE + 14 < 92)
+play_note($EVENT_NOTE + 14,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+14,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main 5-string chords}
+if ($EVENT_NOTE+14 > 75 and $EVENT_NOTE + 14 < 92)
+play_note($EVENT_NOTE + 14,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE + 4 > 65 and $EVENT_NOTE + 4 < 92)
+play_note($EVENT_NOTE+4,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of MAJOR9} 
+
+{OPEN5 key}
+if ($open5 = 1)
+ignore_event($EVENT_ID)
+{Down strum)
+{G major special case}
+if ($strumcounter=0)
+$strumcounter := 1
+set_text ($direction, "Next: Up")
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+else
+{up strum major}
+
+set_text ($direction, "Next: Down")
+$strumcounter := 0
+if ($EVENT_NOTE = 67)
+play_note($EVENT_NOTE+7,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+play_note($EVENT_NOTE-12,$EVENT_VELOCITY,0,-1)
+else
+{main MAJOR 5-string chords}
+if ($EVENT_NOTE+12 > 73 and $EVENT_NOTE + 12 < 92)
+play_note($EVENT_NOTE + 12,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE+7 > 68 and $EVENT_NOTE + 7 < 92)
+play_note($EVENT_NOTE + 7,$EVENT_VELOCITY,0,-1)
+end if
+wait ($strumtime)
+if ($EVENT_NOTE > 61 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE,$EVENT_VELOCITY,0,-1)
+wait ($strumtime)
+if ($EVENT_NOTE > 67 and $EVENT_NOTE < 92)
+play_note($EVENT_NOTE-5,$EVENT_VELOCITY,0,-1)
+end if
+end if
+end if
+end if
+end if
+{end of OPEN5} 
+
+{chord keyswitches}
+{major keyswitch}
+if ($EVENT_NOTE = 38)
+$major := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+  or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 or $EVENT_NOTE = 42 ...
+	or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$major := 0
+end if
+
+{minor keyswitch}
+if ($EVENT_NOTE = 39)
+$minor := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 or $EVENT_NOTE = 42 ...
+	or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$minor := 0
+end if
+
+{dom7 keyswitch}
+if ($EVENT_NOTE = 40)
+$dom7 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 41 or $EVENT_NOTE = 42 ...
+	or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$dom7 := 0
+end if
+
+{major7 keyswitch}
+if ($EVENT_NOTE = 41)
+$major7 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 42 ...
+	or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$major7 := 0
+end if
+
+{minor7 keyswitch}
+if ($EVENT_NOTE = 42)
+$minor7 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$minor7 := 0
+end if
+
+{halfdim7 keyswitch}
+if ($EVENT_NOTE = 43)
+$halfdim7 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$halfdim7 := 0
+end if
+
+{dim7 keyswitch}
+if ($EVENT_NOTE = 44)
+$dim7 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 45 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$dim7 := 0
+end if
+
+{aug7 keyswitch}
+if ($EVENT_NOTE = 45)
+$aug7 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 46 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$aug7 := 0
+end if
+
+{dim keyswitch}
+if ($EVENT_NOTE = 46)
+$dim := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$dim := 0
+end if
+
+{aug keyswitch}
+if ($EVENT_NOTE = 47)
+$aug := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$aug := 0
+end if
+
+{sus4 keyswitch}
+if ($EVENT_NOTE = 100)
+$sus4 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 47 or $EVENT_NOTE = 101 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$sus4 := 0
+end if
+
+{sus2 keyswitch}
+if ($EVENT_NOTE = 101)
+$sus2 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 102 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$sus2 := 0
+end if
+
+{major6 keyswitch}
+if ($EVENT_NOTE = 102)
+$major6 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 ...
+	or $EVENT_NOTE = 103 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$major6 := 0
+end if
+
+{minor6 keyswitch}
+if ($EVENT_NOTE = 103)
+$minor6 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 ...
+	or $EVENT_NOTE = 102 or $EVENT_NOTE = 104 or $EVENT_NOTE = 105)
+$minor6 := 0
+end if
+
+{major9 keyswitch}
+if ($EVENT_NOTE = 104)
+$major9 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 ...
+	or $EVENT_NOTE = 102 or $EVENT_NOTE = 103 or $EVENT_NOTE = 105)
+$major9 := 0
+end if
+
+{open5 keyswitch}
+if ($EVENT_NOTE = 105)
+$open5 := 1
+end if
+if ($EVENT_NOTE = 23 or $EVENT_NOTE = 24 or $EVENT_NOTE = 25 or $EVENT_NOTE = 26 ...
+	or $EVENT_NOTE = 27 or $EVENT_NOTE = 28 or $EVENT_NOTE = 29 or $EVENT_NOTE = 30 ...
+	or $EVENT_NOTE = 38 or $EVENT_NOTE = 39 or $EVENT_NOTE = 40 or $EVENT_NOTE = 41 ...
+	or $EVENT_NOTE = 42 or $EVENT_NOTE = 43 or $EVENT_NOTE = 44 or $EVENT_NOTE = 45 ...
+	or $EVENT_NOTE = 46 or $EVENT_NOTE = 47 or $EVENT_NOTE = 100 or $EVENT_NOTE = 101 ...
+	or $EVENT_NOTE = 102 or $EVENT_NOTE = 103 or $EVENT_NOTE = 104)
+$open5 := 0
+end if
+
+
+end on

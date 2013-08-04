@@ -1,0 +1,472 @@
+on init
+  make_perfview
+set_control_par_str($INST_ICON_ID,$CONTROL_PAR_PICTURE,"BanjoIcon")
+set_key_color(36,$KEY_COLOR_GREEN)
+set_key_color(37,$KEY_COLOR_GREEN)
+set_key_color(48,$KEY_COLOR_CYAN)
+set_key_color(50,$KEY_COLOR_CYAN)
+set_key_color(52,$KEY_COLOR_CYAN)
+set_key_color(53,$KEY_COLOR_CYAN)
+set_key_color(93,$KEY_COLOR_CYAN)
+set_key_color(95,$KEY_COLOR_CYAN)
+set_key_color(96,$KEY_COLOR_CYAN)
+set_key_color(98,$KEY_COLOR_CYAN)
+set_ui_height(3)
+{set mod wheel to 1 for release note volume}automatically switch between hammer-on and pull-off control vibrato size and speed,
+set_controller(1,1)
+
+{speed control for slide articulations}
+declare $i := 4
+declare $speedgroups := 12
+declare ui_knob $speed(320500,841300,1)
+set_knob_unit($speed,$KNOB_UNIT_PERCENT)
+make_persistent($speed)
+read_persistent_var($speed)
+declare $speed_id
+$speed_id := get_ui_id($speed)
+set_control_par($speed_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($speed_id,$CONTROL_PAR_POS_X,436)
+  set_control_par($speed_id,$CONTROL_PAR_POS_Y,22)
+set_text ($speed, "Amount")
+
+$speed := get_engine_par($ENGINE_PAR_SPEED,4,-1,-1)
+{$speed := 100}
+set_knob_defval($speed,500000)
+	set_knob_label($speed, get_engine_par_disp($ENGINE_PAR_SPEED, 4, -1, -1))
+	
+
+declare ui_label $speed_label(1, 1)
+set_text ($speed_label, "Slide Speed")
+declare $speed_label_id
+$speed_label_id := get_ui_id($speed_label)
+set_control_par($speed_label_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($speed_label_id,$CONTROL_PAR_POS_X,436)
+  set_control_par($speed_label_id,$CONTROL_PAR_POS_Y,2)
+
+
+
+{ALternating HOPO init code}
+declare ui_switch $AltHO
+
+declare ui_label $AltHO_label(1, 1)
+set_text ($AltHO_label, "Goin' up?")
+hide_part ($AltHO_label,$HIDE_PART_BG)
+ declare $AltHO_label_id
+  $AltHO_label_id := get_ui_id($AltHO_label)
+  set_control_par($AltHO_label_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($AltHO_label_id,$CONTROL_PAR_POS_X,86)
+  set_control_par($AltHO_label_id,$CONTROL_PAR_POS_Y,10)
+set_text ($AltHO, "Auto Hammer Ons")
+ declare $AltHO_id
+  $AltHO_id := get_ui_id($AltHO)
+  set_control_par($AltHO_id,$CONTROL_PAR_WIDTH,100)
+  set_control_par($AltHO_id,$CONTROL_PAR_HEIGHT,20)
+  set_control_par($AltHO_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($AltHO_id,$CONTROL_PAR_POS_X,80)
+  set_control_par($AltHO_id,$CONTROL_PAR_POS_Y,28)
+  $AltHO := 0
+
+
+declare ui_switch $AltPO
+declare ui_label $AltPO_label(1, 1)
+set_text ($AltPO_label, "Comin' down?")
+hide_part ($AltPO_label,$HIDE_PART_BG)
+ declare $AltPO_label_id
+  $AltPO_label_id := get_ui_id($AltPO_label)
+  set_control_par($AltPO_label_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($AltPO_label_id,$CONTROL_PAR_POS_X,86)
+  set_control_par($AltPO_label_id,$CONTROL_PAR_POS_Y,51)
+set_text ($AltPO, "Auto Pull Offs")
+ declare $AltPO_id
+  $AltPO_id := get_ui_id($AltPO)
+  set_control_par($AltPO_id,$CONTROL_PAR_WIDTH,100)
+  set_control_par($AltPO_id,$CONTROL_PAR_HEIGHT,20)
+  set_control_par($AltPO_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($AltPO_id,$CONTROL_PAR_POS_X,80)
+  set_control_par($AltPO_id,$CONTROL_PAR_POS_Y,69)
+  $AltPO := 0
+
+{HO/PO Indicator Label}
+	declare ui_label $AutoHOPOtext (1,1)
+ declare $AutoHOPOtext_id
+  $AutoHOPOtext_id := get_ui_id($AutoHOPOtext)
+  set_control_par($AutoHOPOtext_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($AutoHOPOtext_id,$CONTROL_PAR_POS_X,86)
+  set_control_par($AutoHOPOtext_id,$CONTROL_PAR_POS_Y,92)
+	declare !RRpos[2]
+!RRpos[0] := "Next: HO/PO"
+!RRpos[1] := "Next: Pluck"
+declare $RRposCounter := 0
+set_text($AutoHOPOtext, "Next: Pluck")
+
+{vibrato init stuff}
+declare ui_switch $vib_button
+declare $vib_button_id
+$vib_button_id := get_ui_id($vib_button)
+set_control_par($vib_button_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($vib_button_id,$CONTROL_PAR_POS_X,436)
+  set_control_par($vib_button_id,$CONTROL_PAR_POS_Y,66)
+  make_persistent($vib_button)
+  read_persistent_var($vib_button)
+ set_text($vib_button,"Vibrato - off")
+$vib_button := 0
+if ($vib_button=0)
+    set_text($vib_button,"Vibrato - off")
+  else
+    set_text($vib_button,"Vibrato - on")
+  end if
+
+declare ui_knob $vibsize(0,100,1)
+declare $vibsize_id
+$vibsize_id := get_ui_id($vibsize)
+set_control_par($vibsize_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($vibsize_id,$CONTROL_PAR_POS_X,382)
+  set_control_par($vibsize_id,$CONTROL_PAR_POS_Y,86)
+set_text ($vibsize, "Vib Size")
+set_knob_unit($vibsize, $KNOB_UNIT_PERCENT)
+
+declare ui_knob $vibspeed(0,100,1)
+declare $vibspeed_id
+$vibspeed_id := get_ui_id($vibspeed)
+set_control_par($vibspeed_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($vibspeed_id,$CONTROL_PAR_POS_X,478)
+  set_control_par($vibspeed_id,$CONTROL_PAR_POS_Y,86)
+set_text ($vibspeed, "Vib Spd")
+set_knob_unit($vibspeed, $KNOB_UNIT_PERCENT)
+
+declare $vibcount1 := 0
+declare $viblink_groups1 := 48
+
+while ($vibcount1 < $viblink_groups1)
+  set_engine_par($ENGINE_PAR_INTMOD_BYPASS,1,$vibcount1,find_mod(0, "LFO_SINE"),-1)
+inc($vibcount1)
+end while
+$vibcount1 := 0
+
+$vibsize := 50
+$vibspeed := 50
+$vib_button := 0
+declare $vibsize_normal := 80000
+declare $vibspeed_normal := 592000
+while ($vibcount1 < $viblink_groups1)
+  _set_engine_par ($ENGINE_PAR_MOD_TARGET_INTENSITY, $vibsize_normal, $vibcount1, find_mod($vibcount1, "LFO_SINE"),...
+					find_target($vibcount1, find_mod($vibcount1, "LFO_SINE"),"LFO_SINE_PITCH"))
+inc($vibcount1)
+end while
+$vibcount1 := 0
+while ($vibcount1 < $viblink_groups1)
+  _set_engine_par ($ENGINE_PAR_INTMOD_FREQUENCY, $vibspeed_normal, $vibcount1, find_mod($vibcount1, "LFO_SINE"), -1)
+inc($vibcount1)
+end while
+$vibcount1 := 0
+
+{mute button and knob stuff}
+  declare ui_switch $mute_button
+declare ui_knob $mute_tone(0,100,1)
+declare $mute_tone_id
+$mute_tone_id := get_ui_id($mute_tone)
+set_control_par($mute_tone_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($mute_tone_id,$CONTROL_PAR_POS_X,256)
+  set_control_par($mute_tone_id,$CONTROL_PAR_POS_Y,45)
+set_text ($mute_tone, "Amount")
+set_knob_unit($mute_tone,$KNOB_UNIT_PERCENT)
+$mute_tone := 50
+set_knob_defval($mute_tone, 50)
+declare $count1 := 0
+declare $link_groups1 := 49
+{declare ui_label $mutetone_value(1, 1)
+set_text ($mutetone_value, find_mod(0, "CV_MUTECUTOFF"))
+declare $mutetone_value_id
+$mutetone_value_id := get_ui_id($mutetone_value)
+set_control_par($mutetone_value_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($mutetone_value_id,$CONTROL_PAR_POS_X,256)
+  set_control_par($mutetone_value_id,$CONTROL_PAR_POS_Y,66)}
+declare ui_label $mutetone_label(1, 1)
+set_text ($mutetone_label, "Mute Tone Knob")
+declare $mutetone_label_id
+$mutetone_label_id := get_ui_id($mutetone_label)
+set_control_par($mutetone_label_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($mutetone_label_id,$CONTROL_PAR_POS_X,256)
+  set_control_par($mutetone_label_id,$CONTROL_PAR_POS_Y,25)
+
+  declare $sus_normal := 1000000
+  declare $sus_muted := 0
+  declare $mute_button_id
+  $mute_button_id := get_ui_id($mute_button)
+  set_control_par($mute_button_id,$CONTROL_PAR_WIDTH,100)
+  set_control_par($mute_button_id,$CONTROL_PAR_HEIGHT,20)
+  set_control_par($mute_button_id,$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  set_control_par($mute_button_id,$CONTROL_PAR_POS_X,250)
+  set_control_par($mute_button_id,$CONTROL_PAR_POS_Y,2)
+  $mute_button := 0
+while ($count1 < $link_groups1)
+  set_engine_par($ENGINE_PAR_EFFECT_BYPASS,1,$count1,1,-1)
+inc($count1)
+end while
+$count1 := 0
+while ($count1 < $link_groups1)
+  _set_engine_par($ENGINE_PAR_SUSTAIN,$sus_normal,$count1,0,-1)
+inc($count1)
+end while
+  set_text($mute_button,"String Mute - off")
+  make_persistent($mute_button)
+  read_persistent_var($mute_button)
+  if ($mute_button=0)
+    set_text($mute_button,"String Mute - off")
+  else
+    set_text($mute_button,"String Mute - on")
+  end if
+end on
+
+{mute button control action}
+on ui_control($mute_button)
+  if ($mute_button=0)
+$count1 := 0
+while ($count1 < $link_groups1)
+    set_engine_par($ENGINE_PAR_EFFECT_BYPASS,1,$count1,1,-1)
+inc($count1)
+end while
+    set_text($mute_button,"String Mute - off")
+$count1 := 0
+while ($count1 < $link_groups1)
+    _set_engine_par($ENGINE_PAR_SUSTAIN,$sus_normal,$count1,0,-1)
+inc($count1)
+end while
+  else
+$count1 := 0
+while ($count1 < $link_groups1)
+    set_engine_par($ENGINE_PAR_EFFECT_BYPASS,0,$count1,1,-1)
+inc($count1)
+end while
+    set_text($mute_button,"String Mute - on")
+$count1 := 0
+while ($count1 < $link_groups1)
+    _set_engine_par($ENGINE_PAR_SUSTAIN,$sus_muted,$count1,0,-1)
+inc($count1)
+end while
+  end if
+end on
+
+on ui_control($mute_tone)
+set_controller(3,$mute_tone)
+end on
+
+on ui_control($vibsize)
+set_controller(14,$vibsize)
+end on
+
+on ui_control($vibspeed)
+set_controller(15,$vibspeed)
+end on
+
+on ui_control($AltHO)
+if($AltHO=0)
+$AltHO := 1
+else
+$AltHO := 0
+end if
+end on
+
+on ui_control($AltPO)
+if($AltPO=0)
+$AltPO := 1
+else
+$AltPO := 0
+end if
+end on
+
+{slide speed knob control stuff}
+on ui_control ($speed)
+$i := 4
+	while ($i < $speedgroups)
+		set_engine_par($ENGINE_PAR_SPEED, $speed, $i, -1, -1)
+		inc($i)
+	end while    
+	set_knob_label($speed, get_engine_par_disp($ENGINE_PAR_SPEED, 4, -1, -1))
+{set_controller(9,$speed)}
+end on
+
+{vibrato button action}
+on ui_control ($vib_button)
+if($vib_button = 0)
+$vibcount1 := 0
+while ($vibcount1 < $viblink_groups1)
+    set_engine_par($ENGINE_PAR_INTMOD_BYPASS,1,$vibcount1,find_mod(0, "LFO_SINE"),-1)
+inc($vibcount1)
+end while
+    set_text($vib_button,"Vibrato - off")
+$vibcount1 := 0
+else
+$vibcount1 := 0
+while ($vibcount1 < $viblink_groups1)
+   set_engine_par($ENGINE_PAR_INTMOD_BYPASS,0,$vibcount1,find_mod(0, "LFO_SINE"),-1)
+inc($vibcount1)
+end while
+    set_text($vib_button,"Vibrato - on")
+$vibcount1 := 0
+end if
+end on
+
+
+on note
+
+{Auto HO/PO label stuff}
+ set_text($AutoHOPOtext,!RRpos[$RRposCounter])
+if ($RRposCounter # 1)
+		inc($RRposCounter)
+else
+		$RRposCounter := 0
+	end if
+
+{mute button action}
+if($EVENT_NOTE=36)
+if($mute_button = 1)
+$count1 := 0
+while ($count1 < $link_groups1)
+    set_engine_par($ENGINE_PAR_EFFECT_BYPASS,1,$count1,1,-1)
+inc($count1)
+end while
+    set_text($mute_button,"String Mute - off")
+$count1 := 0
+while ($count1 < $link_groups1)
+    _set_engine_par($ENGINE_PAR_SUSTAIN,$sus_normal,$count1,0,-1)
+inc($count1)
+end while
+$mute_button := 0
+else
+$count1 := 0
+while ($count1 < $link_groups1)
+   set_engine_par($ENGINE_PAR_EFFECT_BYPASS,0,$count1,1,-1)
+inc($count1)
+end while
+    set_text($mute_button,"String Mute - on")
+$count1 := 0
+while ($count1 < $link_groups1)
+    _set_engine_par($ENGINE_PAR_SUSTAIN,$sus_muted,$count1,0,-1)
+inc($count1)
+end while
+$mute_button := 1
+end if
+end if
+
+{vibrato button action}
+if($EVENT_NOTE=37)
+if($vib_button = 1)
+$vibcount1 := 0
+while ($vibcount1 < $viblink_groups1)
+    set_engine_par($ENGINE_PAR_INTMOD_BYPASS,1,$vibcount1,find_mod(0, "LFO_SINE"),-1)
+inc($vibcount1)
+end while
+    set_text($vib_button,"Vibrato - off")
+$vibcount1 := 0
+$vib_button := 0
+else
+$vibcount1 := 0
+while ($vibcount1 < $viblink_groups1)
+   set_engine_par($ENGINE_PAR_INTMOD_BYPASS,0,$vibcount1,find_mod(0, "LFO_SINE"),-1)
+inc($vibcount1)
+end while
+    set_text($vib_button,"Vibrato - on")
+$vibcount1 := 0
+$vib_button := 1
+end if
+end if
+
+{Auto Hammer Ons Keyswitch Indicators}
+if($EVENT_NOTE=29)
+if($AltHO = 0)
+$AltHO := 1
+
+end if
+
+end if
+
+if($EVENT_NOTE=30)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+if($EVENT_NOTE=28)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+if($EVENT_NOTE=27)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+if($EVENT_NOTE=26)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+if($EVENT_NOTE=25)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+if($EVENT_NOTE=24)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+if($EVENT_NOTE=23)
+if($AltHO = 1)
+$AltHO := 0
+end if
+end if
+
+{Auto Pull Off Keyswitch Indicator stuff}
+if($EVENT_NOTE=30)
+if($AltPO = 0)
+$AltPO := 1
+
+end if
+
+end if
+
+if($EVENT_NOTE=29)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+if($EVENT_NOTE=28)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+if($EVENT_NOTE=27)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+if($EVENT_NOTE=26)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+if($EVENT_NOTE=25)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+if($EVENT_NOTE=24)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+if($EVENT_NOTE=23)
+if($AltPO = 1)
+$AltPO := 0
+end if
+end if
+
+
+end on
+
+
+
+
+
+
